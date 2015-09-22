@@ -82,51 +82,52 @@ if ( x < 4 ) {
     g = digitalRead(5);
     delay(10); 
   
-x = a + b + c + d + e + f + g; }  //majority passes high LO signal when x > 3
+x = a + b + c + d + e + f + g; }   //majority passes high LO signal when x > 3
     
-y = EEPROM.read(address);         //read eeprom
+y = EEPROM.read(address);          //read eeprom
 
-if ( x > 3 && y < 1 ) {           //LO = high? & eeprom data = 0?
-  DateTime now = rtc.now();       //if true, read rtc
-  val = now.unixtime();           //rtc time = val
-  EEPROM.write(address, val);}    //write val to eeprom  
+if ( x > 3 && y < 1 ) {            //LO = high? & eeprom data = 0?
+  DateTime now = rtc.now();        //if true, read rtc
+  val = now.unixtime();            //rtc time = val
+  EEPROM.write(address, val);}     //write val to eeprom  
 
-else if ( x > 3 && y > 0 ) {      //LO = high? & eeprom data > 0?
-  DateTime now = rtc.now();       //read rtc
-  z = now.unixtime();             //rtc time  = z
-  t = (z - y);                    //time elapsed is t, difference between z and y
+else if ( x > 3 && y > 0 ) {       //LO = high? & eeprom data > 0?
+  DateTime now = rtc.now();        //read rtc
+  z = now.unixtime();              //rtc time  = z
+  t = (z - y);                     //time elapsed is t, difference between z and y
 
-  if ( t > 10 && p < 1 ) {        //record with cameras
+  if ( t > 10 && p < 1 ) {         //record with cameras
      digitalWrite(4, HIGH);
      delay(100);
      digitalWrite(4, LOW);
      p = 1; }
      
-  if ( t > 20 && q < 1 ){         //turn on data loggers
+  if ( t > 20 && q < 1 ){          //turn on data loggers
      digitalWrite(6, HIGH);
      q = 1; }
 
-  if ( t > 30 && r < 1 ) {        //turn on deployment signal
+  if ( t > 30 && r < 1 ) {         //turn on deployment signal
      digitalWrite(3, HIGH);
      r = 1; }
      
-  if ( t > 40 && s < 1 ) {        //turn on LAFORGE
+  if ( t > 40 && s < 1 ) {         //turn on LAFORGE
      digitalWrite(2, HIGH);
      s = 1; }
 
-  if ( t > 50 ) {                 //turn off deployment signal
+  if ( t > 50 ) {                  //turn off deployment signal
      digitalWrite(3,LOW); }
 
-  if ( t > 60 ) {                 //turn off LAFORGE
+  if ( t > 60 ) {                  //turn off LAFORGE
      digitalWrite(2,LOW); }
      
-  if ( t > 70 ) {                 //turn off data loggers
+  if ( t > 70 ) {                  //turn off data loggers
      digitalWrite(6,LOW); }
 
-  if ( t > 80 && p > 0 ) {        //turn off cameras
+  if ( t > 80 && p > 0 && p < 2 ) {//turn off cameras
      digitalWrite(4,HIGH);
      delay(5000);
-     digitalWrite(4,LOW); }
+     digitalWrite(4,LOW); 
+     p = 2; }
     
 }
 
