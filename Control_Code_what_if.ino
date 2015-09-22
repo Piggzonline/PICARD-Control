@@ -33,7 +33,6 @@ byte h;
 byte k;
 byte t;
 byte u;
-//byte x;
 byte y;
 byte z;
 
@@ -43,7 +42,7 @@ int r = 0;
 int s = 0;
 int x = 0;
 
-    String inputString = "";         // a string to hold incoming data
+String inputString = "";         // a string to hold incoming data
 
 void setup() { 
 
@@ -54,10 +53,8 @@ void setup() {
   pinMode(4, OUTPUT); //Set Pin 4 - Cameras Trigger - as output
   pinMode(5, INPUT);  //Set Pin 5 - Lift off Signal - as input
   pinMode(6, OUTPUT); //Set Pin 6 - Dataloggers Trigger - as output
- // pinMode(7, INPUT);  //Set Pin 7 - rtc scl - as input
- // pinMode(8, INPUT);  //Set Pin 8 - rtc soa - as input
 
-  rtc.begin(DateTime()); //start RTC
+ // rtc.begin(DateTime()); //start RTC
     
   digitalWrite(4, HIGH); //turn cameras on
   delay(5000);
@@ -85,11 +82,11 @@ if ( x < 4 ) {
     g = digitalRead(5);
     delay(10); 
   
-    x = a + b + c + d + e + f + g; } //majority passes high LO signal when x > 3
+x = a + b + c + d + e + f + g; }  //majority passes high LO signal when x > 3
     
-y = EEPROM.read(address);     //read eeprom
+y = EEPROM.read(address);         //read eeprom
 
-if ( x > 3 && y < 1 ) {      //LO = high? & eeprom data = 0?
+if ( x > 3 && y < 1 ) {           //LO = high? & eeprom data = 0?
   DateTime now = rtc.now();       //if true, read rtc
   val = now.unixtime();           //rtc time = val
   EEPROM.write(address, val);}    //write val to eeprom  
@@ -99,55 +96,39 @@ else if ( x > 3 && y > 0 ) {      //LO = high? & eeprom data > 0?
   z = now.unixtime();             //rtc time  = z
   t = (z - y);                    //time elapsed is t, difference between z and y
 
-  if ( t > 10 && r < 1 ) {
+  if ( t > 10 && p < 1 ) {        //record with cameras
      digitalWrite(4, HIGH);
      delay(100);
      digitalWrite(4, LOW);
+     p = 1; }
+     
+  if ( t > 20 && q < 1 ){         //turn on data loggers
      digitalWrite(6, HIGH);
-     r = 1; }
+     q = 1; }
 
- if ( t > 20 && s < 1 ) {
+  if ( t > 30 && r < 1 ) {        //turn on deployment signal
      digitalWrite(3, HIGH);
+     r = 1; }
+     
+  if ( t > 40 && s < 1 ) {        //turn on LAFORGE
      digitalWrite(2, HIGH);
      s = 1; }
 
- if ( t > 30 ) {
+  if ( t > 50 ) {                 //turn off deployment signal
      digitalWrite(3,LOW); }
 
- if ( t > 40 ) {
-     digitalWrite(2,LOW);
+  if ( t > 60 ) {                 //turn off LAFORGE
+     digitalWrite(2,LOW); }
+     
+  if ( t > 70 ) {                 //turn off data loggers
      digitalWrite(6,LOW); }
 
- if ( t > 50 && p > 0 ) {
+  if ( t > 80 && p > 0 ) {        //turn off cameras
      digitalWrite(4,HIGH);
      delay(5000);
-     digitalWrite(4,LOW); }}
-     
-// switch (t) {  
-//  case 10:
-//   digitalWrite(4, HIGH);
-//   delay(100);
-//   digitalWrite(4, LOW);
-//   break;
-//  case 20:
-//   digitalWrite(6, HIGH); 
-//   break; 
-//  case 30:
-//   digitalWrite(3, HIGH); 
-//   break;
-//  case 40:
-//   digitalWrite(2, HIGH); 
-//   break; 
-//  case 50:
-//   digitalWrite(3, LOW); 
-//   digitalWrite(2, LOW);
-//   digitalWrite(6, LOW);
-//   break;
-//  case 60:
-//   digitalWrite(4, HIGH);
-//   delay(100);
-//   digitalWrite(4, LOW);
-//   break; }}
+     digitalWrite(4,LOW); }
+    
+}
 
   DateTime now = rtc.now();
   h = now.unixtime();
